@@ -23,7 +23,6 @@ type TextInputElement struct {
 	DialogInput
 	MaxLength int              `json:"max_length,omitempty"`
 	MinLength int              `json:"min_length,omitempty"`
-	Hint      string           `json:"hint,omitempty"`
 	Subtype   TextInputSubtype `json:"subtype"`
 	Value     string           `json:"value"`
 }

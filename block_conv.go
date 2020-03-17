@@ -172,6 +172,8 @@ func (b *BlockElements) UnmarshalJSON(data []byte) error {
 			blockElement = &PlainTextInputBlockElement{}
 		case "static_select", "external_select", "users_select", "conversations_select", "channels_select":
 			blockElement = &SelectBlockElement{}
+		case "checkboxes":
+			blockElement = &CheckboxesBlockElement{}
 		default:
 			return errors.New("unsupported block element type")
 		}
@@ -273,6 +275,12 @@ func (a *Accessory) UnmarshalJSON(data []byte) error {
 			return err
 		}
 		a.MultiSelectElement = element.(*MultiSelectBlockElement)
+	case "checkboxes":
+		element, err := unmarshalBlockElement(r, &CheckboxesBlockElement{})
+		if err != nil {
+			return err
+		}
+		a.CheckboxesBlockElement = element.(*CheckboxesBlockElement)
 	default:
 		element, err := unmarshalBlockElement(r, &UnknownBlockElement{})
 		if err != nil {
@@ -316,6 +324,9 @@ func toBlockElement(element *Accessory) BlockElement {
 	}
 	if element.MultiSelectElement != nil {
 		return element.MultiSelectElement
+	}
+	if element.CheckboxesBlockElement != nil {
+		return element.CheckboxesBlockElement
 	}
 
 	return nil

@@ -9,6 +9,7 @@ const (
 	METDatepicker     MessageElementType = "datepicker"
 	METPlainTextInput MessageElementType = "plain_text_input"
 	METRadioButtons   MessageElementType = "radio_buttons"
+	METCheckboxes     MessageElementType = "checkboxes"
 
 	MixedElementImage MixedElementType = "mixed_image"
 	MixedElementText  MixedElementType = "mixed_text"
@@ -39,15 +40,16 @@ type MixedElement interface {
 }
 
 type Accessory struct {
-	ImageElement          *ImageBlockElement
-	ButtonElement         *ButtonBlockElement
-	OverflowElement       *OverflowBlockElement
-	DatePickerElement     *DatePickerBlockElement
-	PlainTextInputElement *PlainTextInputBlockElement
-	RadioButtonsElement   *RadioButtonsBlockElement
-	SelectElement         *SelectBlockElement
-	MultiSelectElement    *MultiSelectBlockElement
-	UnknownElement        *UnknownBlockElement
+	ImageElement           *ImageBlockElement
+	ButtonElement          *ButtonBlockElement
+	OverflowElement        *OverflowBlockElement
+	DatePickerElement      *DatePickerBlockElement
+	PlainTextInputElement  *PlainTextInputBlockElement
+	RadioButtonsElement    *RadioButtonsBlockElement
+	SelectElement          *SelectBlockElement
+	MultiSelectElement     *MultiSelectBlockElement
+	CheckboxesBlockElement *CheckboxesBlockElement
+	UnknownElement         *UnknownBlockElement
 }
 
 // NewAccessory returns a new Accessory for a given block element
@@ -69,6 +71,8 @@ func NewAccessory(element BlockElement) *Accessory {
 		return &Accessory{SelectElement: element.(*SelectBlockElement)}
 	case *MultiSelectBlockElement:
 		return &Accessory{MultiSelectElement: element.(*MultiSelectBlockElement)}
+	case *CheckboxesBlockElement:
+		return &Accessory{CheckboxesBlockElement: element.(*CheckboxesBlockElement)}
 	default:
 		return &Accessory{UnknownElement: element.(*UnknownBlockElement)}
 	}
@@ -384,6 +388,32 @@ func (s RadioButtonsBlockElement) ElementType() MessageElementType {
 func NewRadioButtonsBlockElement(actionID string, options ...*OptionBlockObject) *RadioButtonsBlockElement {
 	return &RadioButtonsBlockElement{
 		Type:     METRadioButtons,
+		ActionID: actionID,
+		Options:  options,
+	}
+}
+
+// CheckboxesBlockElement defines an element which lets users choose multiple items
+// from a list of possible options.
+//
+// More Information: https://api.slack.com/reference/block-kit/block-elements#checkboxes
+type CheckboxesBlockElement struct {
+	Type           MessageElementType       `json:"type"`
+	ActionID       string                   `json:"action_id"`
+	Options        []*OptionBlockObject     `json:"options"`
+	InitialOptions []*OptionBlockObject     `json:"initial_options,omitempty"`
+	Confirm        *ConfirmationBlockObject `json:"confirm,omitempty"`
+}
+
+// ElementType returns the type of the Element
+func (s CheckboxesBlockElement) ElementType() MessageElementType {
+	return s.Type
+}
+
+// NewCheckboxesBlockElement returns an instance of a radio buttons element.
+func NewCheckboxesBlockElement(actionID string, options ...*OptionBlockObject) *CheckboxesBlockElement {
+	return &CheckboxesBlockElement{
+		Type:     METCheckboxes,
 		ActionID: actionID,
 		Options:  options,
 	}

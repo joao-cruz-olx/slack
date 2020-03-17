@@ -140,3 +140,24 @@ func TestNewRadioButtonsBlockElement(t *testing.T) {
 	assert.Equal(t, len(radioButtonsElement.Options), 3)
 
 }
+
+func TestNewCheckboxesBlockElement(t *testing.T) {
+
+	// Build Text Objects associated with each option
+	checkBoxesOptionTextOne := NewTextBlockObject("plain_text", "Option One", false, false)
+	checkBoxesOptionTextTwo := NewTextBlockObject("plain_text", "Option Two", false, false)
+	checkBoxesOptionTextThree := NewTextBlockObject("plain_text", "Option Three", false, false)
+
+	// Build each option, providing a value for the option
+	checkBoxesOptionOne := NewOptionBlockObject("value-0", checkBoxesOptionTextOne)
+	checkBoxesOptionTwo := NewOptionBlockObject("value-1", checkBoxesOptionTextTwo)
+	checkBoxesOptionThree := NewOptionBlockObject("value-2", checkBoxesOptionTextThree)
+
+	// Build overflow section
+	checkBoxesElement := NewCheckboxesBlockElement("test", checkBoxesOptionOne, checkBoxesOptionTwo, checkBoxesOptionThree)
+
+	assert.Equal(t, string(checkBoxesElement.Type), "checkboxes")
+	assert.Equal(t, checkBoxesElement.ActionID, "test")
+	assert.Equal(t, len(checkBoxesElement.Options), 3)
+
+}
